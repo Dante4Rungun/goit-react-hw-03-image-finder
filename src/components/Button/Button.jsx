@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { ThreeDots } from "react-loader-spinner";
 import styled from './Button.module.css'
 
 
