@@ -52,7 +52,7 @@ export class ImageFinder extends Component {
     nextPage = async () => {
         this.setState({ page: this.state.page + 1})
         try {
-        const images = await api.fetchImagesWithQuery(this.state.query,this.state.page);
+        const images = await api.fetchImagesWithQuery(this.state.query,this.state.page + 1);
         this.setState(state => ({
             images: images
         }));
