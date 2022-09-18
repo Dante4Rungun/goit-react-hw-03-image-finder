@@ -8,8 +8,6 @@ export const fetchImagesWithQuery = async (searchQuery,page) => {
     return response.data.hits
 }
 
-const exportedObjects = {
-  fetchImagesWithQuery
-}
-
-export default exportedObjects
+export default {
+  fetchImagesWithQuery,
+};

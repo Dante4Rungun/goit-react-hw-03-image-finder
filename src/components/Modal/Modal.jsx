@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import styled from './Modal.module.css'
-import PropTypes from 'prop-types';
 
 export class Modal extends Component {
 
@@ -13,9 +12,4 @@ export class Modal extends Component {
             </div>
         )
     }
-}
-
-Modal.propTypes = {
-    onBackdropExit: PropTypes.func,
-    src: PropTypes.string
 }

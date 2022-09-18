@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { ThreeDots } from "react-loader-spinner";
 import styled from './Button.module.css'
-import PropTypes from 'prop-types';
+
 
 export class Button extends Component {
 
@@ -9,9 +10,4 @@ export class Button extends Component {
             <button className={styled.button} onClick={this.props.nextPage}>{this.props.textContent}</button>
         )
     }
-}
-
-Button.propTypes = {
-    nextPage: PropTypes.func,
-    textContent: PropTypes.string
 }

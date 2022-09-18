@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import styled from "./Searchbar.module.css"
 import { AiOutlineSearch } from "react-icons/ai";
 import debounce from 'lodash.debounce';
-import PropTypes from 'prop-types';
 
 export class Searchbar extends Component {
     state = {
@@ -13,7 +12,7 @@ export class Searchbar extends Component {
         this.setState(state => ({
             search: event.target.value
         }))
-    }, 300)
+    }, 0)
     
     onSubmitQuery = event => {
         event.preventDefault()
@@ -38,8 +37,4 @@ export class Searchbar extends Component {
             </header>
         )
     }
-}
-
-Searchbar.propTypes = {
-    search: PropTypes.func,
 }
