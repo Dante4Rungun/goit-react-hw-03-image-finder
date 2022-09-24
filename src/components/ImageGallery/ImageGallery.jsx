@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styled from './ImageGallery.module.css'
+import PropTypes, { object } from 'prop-types'
 import { ImageGalleryItem } from "components/ImageGalleryItem/ImageGalleryItem";
 
 export class ImageGallery extends Component {
@@ -15,7 +16,7 @@ export class ImageGallery extends Component {
     }
 }
 
-
-/*                {images.map(image => (
-                    <ImageGalleryItem src={image.webformatURL} alt="photo" />
-                ))} */
+ImageGallery.propTypes = {
+    images: PropTypes.arrayOf(object),
+    openModal: PropTypes.func
+}
