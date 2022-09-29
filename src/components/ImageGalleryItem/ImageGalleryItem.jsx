@@ -1,19 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from './ImageGalleryItem.module.css'
 import PropTypes from 'prop-types'
-export class ImageGalleryItem extends Component {
 
-    render() {   
-        return (
-            <li key={this.props.id} className={styled.ImageGalleryItem}>
-                <img className={styled.ImageGalleryItem_image} src={this.props.src} alt={this.props.alt} data-large={this.props.srcLarge} onClick={this.props.openModal}/>    
-            </li> 
-        )
-    }
+export const ImageGalleryItem = ({ id, src, alt, srcLarge, openModal }) => {
+    return (
+        <li key={id} className={styled.ImageGalleryItem}>
+            <img className={styled.ImageGalleryItem_image} src={src} alt={alt} data-large={srcLarge} onClick={openModal}/>    
+        </li> 
+    )
 }
 
 ImageGalleryItem.propTypes = {
-    id: PropTypes.string,
+    id: PropTypes.number,
     src: PropTypes.string,
     alt: PropTypes.string,
     srcLarge: PropTypes.string,

@@ -1,13 +1,11 @@
-import { Component } from 'react';
+import React from "react";
 import styled from './Error.module.css'
 import PropTypes from 'prop-types'
 
-export class Error extends Component {
-    render() {
-        return (
-            <p className={styled.error}>{this.props.error}</p>
-        )
-    }
+export const Error = ({error}) => {
+    return (
+        <p className={styled.error}>{error}</p>
+    )
 }
 
 Error.propTypes = {

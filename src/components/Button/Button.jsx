@@ -1,15 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from './Button.module.css'
 import PropTypes from 'prop-types'
 
-
-export class Button extends Component {
-
-    render() {       
-        return (
-            <button className={styled.button} onClick={this.props.nextPage}>{this.props.textContent}</button>
-        )
-    }
+export const Button = ({ nextPage, textContent, show }) => {
+    return (
+        <div className={ styled.buttonContainer }>
+            {show === true ? <button className={styled.button} onClick={nextPage}>{textContent}</button> : ''}  
+        </div>
+    )
 }
 
 Button.propTypes = {

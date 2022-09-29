@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import styled from './ImageFinder.module.css'
 import api from "services/api";
 import { Searchbar } from "components/Searchbar/Searchbar";
@@ -7,103 +7,80 @@ import { Button } from "components/Button/Button";
 import { Error } from "components/Error/Error";
 import { Modal } from "components/Modal/Modal";
 import { RotatingLines } from 'react-loader-spinner'
+import { useFirstQuery } from "context/firstQueryContext";
 
-export class ImageFinder extends Component {
-    state = {
-        images: [],
-        isLoading: false,
-        error: null,
-        page: 1,
-        query: '',
-        modalVisible: false,
-        modalSrc: ''
+export const ImageFinder = () => {
+
+    const [images, setImages] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
+    const [page, setPage] = useState(0)
+    const [query, setQuery] = useState('')
+    const [modalVisible, setModalVisible] = useState(false)
+    const [modalSrc, setModalSrc] = useState('')
+    const { isFirstQuery, setFirstQueryStatus, isButtonShow, setIsButtonShow } = useFirstQuery()
+
+    const search = async (query) => {
+        setQuery(query)
+        setPage(1)
+        setIsButtonShow(true)
     }
 
-    async componentDidMount() {
-        this.setState({ isLoading: true });
+    const nextPage = async () => {
+        setPage(prevPage => prevPage + 1)
+    }
 
-        try {
-        const images = await api.fetchImagesWithQuery('',this.state.page);
-        this.setState(state => ({
-            images: images
-        }));
-        } catch (error) {
-        this.setState({ error });
-        } finally {
-        this.setState({ isLoading: false });
+    useEffect(() => {
+        async function fetchImages() {
+            if (page === 1) {
+                setIsLoading(prevLoading => !prevLoading)                
+            }
+            try {
+                const imagesFetch = await api.fetchImagesWithQuery(query, page);
+                page === 1 ? setImages(imagesFetch) : setImages(prevImages => [...prevImages,...imagesFetch])
+            } catch (error) {
+                setError({ error });
+            } finally {
+                if (page === 1) {
+                    setIsLoading(prevLoading => !prevLoading)                
+                }
+            }
         }
-    }
+        isFirstQuery === true ? setFirstQueryStatus() : fetchImages()
+    }, [page, query])
 
-    search = async (query, source) => {
-        this.setState({ isLoading: true });
-        this.setState({ query: query, page: 1})
-        try {
-        const images = await api.fetchImagesWithQuery(query,1);
-        this.setState(state => ({
-            images: images
-        }));
-        } catch (error) {
-        this.setState({ error });
-        } finally {
-        this.setState({ isLoading: false });
-        }
-    }
-
-    nextPage = async () => {
-        this.setState({ page: this.state.page + 1})
-        try {
-        const images = await api.fetchImagesWithQuery(this.state.query,this.state.page + 1);
-        this.setState(state => ({
-            images: [...this.state.images,...images]
-        }));
-        } catch (error) {
-        this.setState({ error });
-        } finally {
-        this.setState({ isLoading: false });
-        }    
-    }
-
-    onBackdropExit = (event) => {
+    const onBackdropExit = (event) => {
         if (event.target.getAttribute('data-backdrop') != null) {
-            this.setState(state => ({
-                modalVisible: false
-            }))
+            setModalVisible(false)
         }
     }
 
-    onEsc = (event) => {
+    const onEsc = (event) => {
         if (event.key === "Escape") {
-            this.setState(state => ({
-                modalVisible: false
-            }))           
+            setModalVisible(false)         
         }
     }
 
-    getSrcModal = (event) => {
-        this.setState(state => ({
-            modalSrc: event.target.getAttribute('data-large'),
-            modalVisible: true
-        }))
+    const getSrcModal = (event) => {
+        setModalSrc(event.target.getAttribute('data-large'))
+        setModalVisible(true)
     }
 
-    render() { 
-        const { images, isLoading, error, modalVisible, modalSrc } = this.state
-
-        return (
-            <div className={styled.imageFinder} onKeyDown={this.onEsc} tabIndex="0">
-                <Searchbar search={this.search} />
-                {error && <Error error={error} />}
-                {isLoading === true ?
-                    <RotatingLines
-                    strokeColor="grey"
-                    strokeWidth="5"
-                    animationDuration="0.75"
-                    width="96"
-                    visible={true}
-                    /> : <ImageGallery images={images} openModal={this.getSrcModal} />}
-                <Button textContent="Load more" nextPage={this.nextPage} />
-                {modalVisible && <Modal src={modalSrc} onBackdropExit={this.onBackdropExit}/>}               
-            </div>     
-        )
-    }
+     return (
+        <div className={styled.imageFinder} onKeyDown={onEsc} tabIndex="0">
+            <Searchbar searchFunc={search} />
+            {error && <Error error={error} />}
+            {isLoading === true ?
+                <RotatingLines
+                strokeColor="grey"
+                strokeWidth="5"
+                animationDuration="0.75"
+                width="96"
+                visible={true}
+                 /> : <ImageGallery images={images} openModal={getSrcModal} page={page} />
+            }
+            <Button textContent="Load more" nextPage={nextPage} show={isButtonShow} />                    
+            {modalVisible && <Modal src={modalSrc} onBackdropExit={onBackdropExit}/>}               
+        </div>     
+    )
 }

@@ -1,43 +1,39 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "./Searchbar.module.css"
 import { AiOutlineSearch } from "react-icons/ai";
 import debounce from 'lodash.debounce';
 import PropTypes from 'prop-types'
+import { useState } from "react";
 
-export class Searchbar extends Component {
-    state = {
-        search:''
-    }    
+export const Searchbar = ({ searchFunc }) => {
 
-    inputOnChange = debounce((event) => {
-        this.setState(state => ({
-            search: event.target.value
-        }))
+    const [search, setSearch] = useState('')
+
+    const inputOnChange = debounce((event) => {
+        setSearch(event.target.value)
     }, 0)
     
-    onSubmitQuery = event => {
+    const onSubmitQuery = event => {
         event.preventDefault()
-        this.props.search(this.state.search.trim().replace('  ',' '),'searchbar')
+        searchFunc(search.trim().replace('  ',' '),'searchbar')
     }
 
-    render() {
-        return (
-            <header className={styled.searchbar}>
-                <form className={styled.searchForm} onChange={this.inputOnChange} onSubmit={this.onSubmitQuery}>
-                    <button type="submit">
-                        <AiOutlineSearch className="submit__icon"/>
-                    </button>
-                    <input
-                        className={styled.input}
-                        type="text"
-                        autoComplete="off"
-                        autoFocus
-                        placeholder="Search images and photos"
-                    />
-                </form>
-            </header>
-        )
-    }
+    return (
+        <header className={styled.searchbar}>
+            <form className={styled.searchForm} onChange={inputOnChange} onSubmit={onSubmitQuery}>
+                <button type="submit">
+                    <AiOutlineSearch className="submit__icon"/>
+                </button>
+                <input
+                    className={styled.input}
+                    type="text"
+                    autoComplete="off"
+                    autoFocus
+                    placeholder="Search images and photos"
+                />
+            </form>
+        </header>
+    )
 }
 
 Searchbar.propTypes = {

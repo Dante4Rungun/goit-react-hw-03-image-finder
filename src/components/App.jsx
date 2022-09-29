@@ -1,5 +1,6 @@
 import { ImageFinder } from "./ImageFinder/ImageFinder";
 import { Component } from "react";
+import { FirstQueryProvider } from "context/firstQueryContext";
 
 export class App extends Component  {
   render() {
@@ -13,7 +14,9 @@ export class App extends Component  {
         color: '#010101'
       }}
     >
-      <ImageFinder />
+      <FirstQueryProvider>
+        <ImageFinder />
+      </FirstQueryProvider>
     </div>
   )}
 };
